@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.UserMapper;
@@ -15,12 +16,14 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserMapper userMapper;
 	
+	@Cacheable(cacheNames="user.login")
 	@Override
 	public User login(Map<String, Object> map) {
 
 		return userMapper.selectByUsernameAndPassword(map);
 	}
 
+	@Cacheable(value="register", key="#user.getUsername()")
 	@Override
 	public int register(User user) {
 
